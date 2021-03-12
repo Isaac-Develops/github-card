@@ -1,5 +1,6 @@
-import React, { useState } from "react"
-import { Card, Button } from "react-bootstrap"
+import React, { useState, useEffect } from "react"
+import { Button } from "react-bootstrap"
+import GithubCard from "./views/GithubCard"
 import "./App.css"
 
 function App() {
@@ -7,34 +8,19 @@ function App() {
   const [active, setActive] = useState(false)
 
   const handleToggle = () => {
+    setActive((active) => !active)
+  }
+
+  useEffect(() => {
     fetch("https://api.github.com/users/Isaac-Develops")
       .then((res) => res.json())
       .then((user) => setUser(user))
-
-    setActive((active) => !active)
-  }
+  }, [])
 
   return (
     <>
       <Button onClick={handleToggle}>Toggle Profile</Button>
-      {user && active && (
-        <Card>
-          <Card.Img
-            src={user.avatar_url}
-            alt={user.name + "'s Profile Picture"}
-            variant="top"
-          />
-          <Card.Body>
-            <Card.Title>{user.name && user.name}</Card.Title>
-            <Card.Text>
-              {user.followers && "Followers: " + user.followers}
-            </Card.Text>
-            <Card.Text>
-              {user.following && "Following: " + user.following}
-            </Card.Text>
-          </Card.Body>
-        </Card>
-      )}
+      <GithubCard active={active} user={user} />
     </>
   )
 }
