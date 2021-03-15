@@ -1,25 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react"
+import { Button } from "react-bootstrap"
+import GithubCard from "./views/GithubCard"
+import "./App.css"
 
 function App() {
+  const [user, setUser] = useState()
+  const [active, setActive] = useState(false)
+
+  const handleToggle = () => {
+    setActive((active) => !active)
+  }
+
+  useEffect(() => {
+    fetch("https://api.github.com/users/Isaac-Develops")
+      .then((res) => res.json())
+      .then((user) => setUser(user))
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <Button onClick={handleToggle}>Toggle Profile</Button>
+      <GithubCard active={active} user={user} />
+    </>
+  )
 }
 
-export default App;
+export default App
